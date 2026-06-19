@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClearSky</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <div class="device-wrapper theme-light" id="device-wrapper">
+      <div class="toast-msg-box" id="app-toast-message">
+        Preferences Saved Successfully!
+      </div>
+
+      <main class="app-content" id="app-content">
+        <section class="tab-content active" id="tab-screen-home">
+          <!-- Screen Title bar -->
+          <div class="screen-header">
+            <button
+              class="header-btn"
+              onclick="openPremiumModal()"
+              title="Premium Member Options"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path
+                  d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"
+                />
+              </svg>
+            </button>
+
+            <div style="text-align: center">
+              <h2
+                class="screen-title"
+                id="home-loc-name"
+                style="justify-content: center; font-size: 20px"
+              >
+                Johannesburg, SA
+              </h2>
+              <span
+                class="screen-title-sub"
+                id="home-loc-update"
+                style="font-size: 11px; margin-top: 2px; display: inline-block"
+                >Updated Just Now</span
+              >
+            </div>
+            <button
+              class="header-btn"
+              onclick="openLocationManager()"
+              title="Manage Location Settings"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="home-sky-view">
+            <div class="glow-effect"></div>
+
+            <div class="home-sky-icon" id="home-sky-illustration"></div>
+
+            <div
+              class="home-temp-container"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+              "
+            >
+              <span
+                class="home-temp"
+                id="home-current-temp"
+                style="margin-left: 20px"
+                >24</span
+              >
+            </div>
+            <p class="home-condition" id="home-current-condition">
+              Mostly Sunny
+            </p>
+            <p class="home-highlow" id="home-current-highlow">H: 28° L: 19°</p>
+          </div>
+
+          <div class="home-stats-grid">
+            <div class="stat-box">
+              <svg viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                <path
+                  d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="stat-label">HUMIDITY</span>
+              <span class="stat-value" id="home-stat-humidity">64%</span>
+            </div>
+            <div class="stat-box">
+              <svg viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                <path
+                  d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="stat-label">WIND</span>
+              <span class="stat-value" id="home-stat-wind">12 km/h NW</span>
+            </div>
+            <div class="stat-box">
+              <svg viewBox="0 0 24 24" stroke="currentColor" fill="none">
+                <path
+                  d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span class="stat-label">FEELS LIKE</span>
+              <span class="stat-value" id="home-stat-feelslike">26°</span>
+            </div>
+          </div>
+
+          <button
+            class="btn-primary"
+            id="home-refresh-trigger"
+            onclick="refreshWeatherDataEvent()"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="width: 18px; height: 18px"
+            >
+              <polyline points="23 4 23 10 17 10" />
+              <polyline points="1 20 1 14 7 14" />
+              <path
+                d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"
+              />
+            </svg>
+            <span>Sync</span>
+          </button>
+
+          <button
+            class="btn-secondary"
+            onclick="
+              switchTab('forecast');
+              setForecastView('hourly');
+            "
+          >
+            <span>View Hourly Forecast</span>
+          </button>
+
+          <div class="tip-banner">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <div class="tip-content">
+              <span class="tip-title">METEOROLOGICAL INSIGHT</span>
+              <span class="tip-text" id="home-tip-text">
+                Sync with meteorology stations to generate daily atmospheric
+                suggestions.
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-content" id="tab-screen-forecast">
+          <div class="screen-header">
+            <button
+              class="header-btn"
+              onclick="switchTab('home')"
+              title="Return Home"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2 class="screen-title" style="font-size: 18px">Forecast</h2>
+
+            <div class="pill-switch">
+              <div class="switch-option active" id="unit-option-c-extended">
+                °C
+              </div>
+              <div class="switch-option" id="unit-option-f-extended">°F</div>
+            </div>
+          </div>
+
+          <div class="forecast-toggle-container">
+            <div class="forecast-toggle-pill">
+              <div
+                class="forecast-toggle-option active"
+                id="forecast-toggle-hourly"
+                onclick="setForecastView('hourly')"
+              >
+                8-Hour Timeline
+              </div>
+              <div
+                class="forecast-toggle-option"
+                id="forecast-toggle-daily"
+                onclick="setForecastView('daily')"
+              >
+                7-Day Extended
+              </div>
+            </div>
+          </div>
+
+          <div id="forecast-hourly-subview" class="forecast-subview show">
+            <div class="sky-condition-card">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              <div class="sky-condition-info">
+                <h4 class="sky-condition-title">Atmosphere Conditions</h4>
+                <p class="sky-condition-desc" id="hourly-timeline-sum-text">
+                  Retrieving real-time cloud conditions from weather stations...
+                </p>
+              </div>
+            </div>
+
+            <div class="section-header">
+              <span class="section-title">Timeline</span>
+              <span class="section-badge">NEXT 8 HOURS</span>
+            </div>
+
+            <div class="timeline-scroll" id="hourly-scroll-container">
+              <p
+                style="padding: 10px; font-size: 12px; color: var(--text-muted)"
+              >
+                Loading segments...
+              </p>
+            </div>
+
+            <div class="section-header" style="margin-top: 10px">
+              <span class="section-title">Overnight Outlook</span>
+              <span class="section-badge font-mono">24H PROJECTIONS</span>
+            </div>
+
+            <div class="vertical-list" id="hourly-vertical-slots-list"></div>
+
+            <button
+              class="btn-primary"
+              onclick="setForecastView('daily')"
+              style="margin-top: 10px"
+            >
+              <span>Show 7-Day Extended Forecast</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width: 16px; height: 16px"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          </div>
+
+          <div id="forecast-daily-subview" class="forecast-subview">
+            <h2
+              style="
+                font-family: var(--font-display);
+                font-size: 24px;
+                font-weight: 700;
+                color: var(--text-main);
+                margin-bottom: 2px;
+              "
+            >
+              Extended Outlook
+            </h2>
+            <p
+              class="screen-title-sub"
+              id="extended-forecast-loc-subtitle"
+              style="margin-bottom: 12px"
+            >
+              Detailed daily predictions from Open-Meteo
+            </p>
+
+            <div class="unit-switcher-row">
+              <div class="unit-switcher-label">
+                <div class="unit-switcher-icon-wrap">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"
+                    />
+                  </svg>
+                </div>
+                <span>Temperature Unit</span>
+              </div>
+
+              <div class="pill-switch">
+                <div
+                  class="switch-option active"
+                  id="unit-option-c-settings"
+                  style="padding: 6px 16px"
+                >
+                  Celsius
+                </div>
+                <div
+                  class="switch-option"
+                  id="unit-option-f-settings"
+                  style="padding: 6px 16px"
+                >
+                  Fahrenheit
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="daily-forecast-container"
+              id="extended-daily-loop"
+            ></div>
+
+            <div class="blue-pro-banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              <div style="display: flex; flex-direction: column">
+                <div><span class="pro-badge">Digital Pro Sensor</span></div>
+                <p
+                  style="
+                    font-size: 12px;
+                    line-height: 1.4;
+                    color: var(--text-sub);
+                    margin-top: 4px;
+                  "
+                >
+                  Compare temperatures and humidity levels easily with our
+                  custom alignment curves!
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-content" id="tab-screen-tips">
+          <div class="screen-header">
+            <button class="header-btn" onclick="switchTab('home')" title="Back">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2 class="screen-title" style="font-size: 18px">
+              Travel Advisories
+            </h2>
+            <button
+              class="header-btn"
+              onclick="openLocationManager()"
+              title="Bookmarks Selection"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="route-planner-card">
+            <div class="route-row">
+              <div class="route-selector-container">
+                <label class="route-field-label"
+                  >Current Location (Start)</label
+                >
+                <div class="selector-action-group">
+                  <select
+                    id="tips-start-location-select"
+                    onchange="handleTravelRouteUpdate()"
+                  ></select>
+                  <button
+                    class="btn-location-gps"
+                    id="tips-gps-btn"
+                    onclick="detectGoogleGPSLocation()"
+                    title="Get coordinates using device GPS sensors"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      style="width: 13px; height: 13px; margin-right: 3px"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span>GPS</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="route-connector">
+              <div class="connector-line"></div>
+              <span class="connector-arrow">➔</span>
+            </div>
+
+            <div class="route-row">
+              <div class="route-selector-container">
+                <label class="route-field-label">Journey Destination</label>
+                <select
+                  id="tips-end-location-select"
+                  class="selector-full-width"
+                  onchange="handleTravelRouteUpdate()"
+                ></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="tips-hero-card journey-summary-card">
+            <div class="journey-weather-visuals">
+              <div class="tips-hero-icon" id="tips-start-weather-icon"></div>
+              <div class="journey-indicator-link">
+                <span class="journey-dot start-dot"></span>
+                <span class="journey-line"></span>
+                <span class="journey-dot end-dot"></span>
+              </div>
+              <div class="tips-hero-icon" id="tips-end-weather-icon"></div>
+            </div>
+
+            <div class="tips-hero-text" style="flex: 1">
+              <h3 class="tips-loc-name" id="tips-active-location-title">
+                San Francisco to London
+              </h3>
+              <p class="tips-loc-weather" id="tips-active-weather-desc">
+                Syncing forecasts...
+              </p>
+            </div>
+          </div>
+
+          <div class="travel-category-deck">
+            <div class="travel-tip-card">
+              <div class="card-tip-header">
+                <div class="tip-icon-glow c-packing">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <rect x="3" y="8" width="18" height="12" rx="2" />
+                    <path d="M7 8V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3" />
+                    <line x1="12" y1="12" x2="12" y2="16" />
+                  </svg>
+                </div>
+                <div class="tip-meta">
+                  <span class="tip-cat-lbl">LUGGAGE & APPAREL</span>
+                  <h4 class="tip-card-title">Packing Essentials</h4>
+                </div>
+              </div>
+              <p class="tip-details-body" id="tips-pack-suggestions">
+                Compare thermal profiles to build suggestions.
+              </p>
+            </div>
+
+            <div class="travel-tip-card">
+              <div class="card-tip-header">
+                <div class="tip-icon-glow c-transit">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <path
+                      d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 13v3c0 .6.4 1 1 1h2"
+                    />
+                    <circle cx="7" cy="17" r="2" />
+                    <circle cx="17" cy="17" r="2" />
+                  </svg>
+                </div>
+                <div class="tip-meta">
+                  <span class="tip-cat-lbl">TRANSIT & LOGISTICS</span>
+                  <h4 class="tip-card-title">Driving & Flight Corridors</h4>
+                </div>
+              </div>
+              <p class="tip-details-body" id="tips-transit-suggestions">
+                Analysing weather-induced flight holding metrics...
+              </p>
+            </div>
+
+            <div class="travel-tip-card">
+              <div class="card-tip-header">
+                <div class="tip-icon-glow c-leisure">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon
+                      points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+                    />
+                  </svg>
+                </div>
+                <div class="tip-meta">
+                  <span class="tip-cat-lbl">ACTIVITIES & PLACES</span>
+                  <h4 class="tip-card-title">Destination Activities</h4>
+                </div>
+              </div>
+              <p class="tip-details-body" id="tips-leisure-suggestions">
+                Determining scenic viewpoints and walking clearances...
+              </p>
+            </div>
+
+            <div class="travel-tip-card specialty-score-card">
+              <h4 class="score-title font-mono">
+                Travel Suitability Comfort Index
+              </h4>
+              <div class="score-main-row">
+                <div
+                  class="score-radial-progress"
+                  style="border-color: var(--accent-color)"
+                >
+                  <span class="score-number" id="tips-comfort-score-value"
+                    >--</span
+                  >
+                  <span class="score-pct">%</span>
+                </div>
+                <div class="score-insights">
+                  <div class="suitability-pill" id="tips-suitability-badge">
+                    Evaluating...
+                  </div>
+                  <p class="suitability-text" id="tips-suitability-description">
+                    Combining live wind gusts, rain probability indexes, and
+                    temp differentials...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-content" id="tab-screen-map">
+          <div class="screen-header">
+            <button class="header-btn" onclick="switchTab('home')" title="Back">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2 class="screen-title" style="font-size: 18px">SA Weather Map</h2>
+            <button
+              class="header-btn"
+              onclick="syncSouthAfricanMapWeather()"
+              title="Refresh Map Markers"
+              id="map-refresh-trigger"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width: 18px; height: 18px"
+              >
+                <path
+                  d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="map-controls-pills">
+            <span
+              class="map-pill active"
+              id="pill-map-sa"
+              onclick="centerMapOn('sa')"
+              >South Africa</span
+            >
+            <span
+              class="map-pill"
+              id="pill-map-capetown"
+              onclick="centerMapOn('capetown')"
+              >Cape Town</span
+            >
+            <span
+              class="map-pill"
+              id="pill-map-joburg"
+              onclick="centerMapOn('joburg')"
+              >Gauteng</span
+            >
+            <span
+              class="map-pill"
+              id="pill-map-durban"
+              onclick="centerMapOn('durban')"
+              >Durban</span
+            >
+            <span class="map-pill" id="pill-map-pe" onclick="centerMapOn('pe')"
+              >Gqeberha (PE)</span
+            >
+          </div>
+
+          <div class="map-container-frame">
+            <div
+              id="interactive-leaflet-map"
+              style="
+                width: 100%;
+                height: 350px;
+                border-radius: 16px;
+                border: 1px solid var(--card-border);
+                background-color: #121824;
+                position: relative;
+                overflow: hidden;
+              "
+            >
+              <div id="map-initial-spinner" class="map-overlay-loading">
+                <span class="spinner-circle"></span>
+                <p style="font-size: 12px; font-weight: 500">
+                  Loading South African Meteorological Net...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="map-forecast-display-details card-row"
+            style="margin-top: 4px"
+          >
+            <div class="map-info-left">
+              <span class="map-info-title" id="map-selected-city-title"
+                >South Africa Weather Grid</span
+              >
+              <span class="map-info-sub" id="map-selected-city-details"
+                >Click any station marker to pull weather attributes.</span
+              >
+            </div>
+            <div class="map-info-right" id="map-selected-city-temp">--</div>
+          </div>
+
+          <div
+            style="
+              margin-top: 14px;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            "
+          >
+            <h5 class="suggest-title" style="margin-bottom: 2px">
+              Weather Map Layers
+            </h5>
+            <div class="map-layer-toggles">
+              <button
+                class="layer-toggle-btn active"
+                id="layer-btn-street"
+                onclick="toggleMapLayer('street')"
+              >
+                Street Roads
+              </button>
+              <button
+                class="layer-toggle-btn"
+                id="layer-btn-dark"
+                onclick="toggleMapLayer('dark')"
+              >
+                Dark Cosmic
+              </button>
+              <button
+                class="layer-toggle-btn"
+                id="layer-btn-topo"
+                onclick="toggleMapLayer('topo')"
+              >
+                Topography
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-content" id="tab-screen-settings">
+          <div class="screen-header">
+            <button class="header-btn" onclick="switchTab('home')" title="Back">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+            <h2 class="screen-title" style="font-size: 18px">Settings</h2>
+            <div style="width: 38px"></div>
+          </div>
+
+          <h4 class="settings-section-title">General Preferences</h4>
+          <div class="settings-list-group">
+            <div class="settings-row-item">
+              <div class="setting-meta-wrap">
+                <div class="setting-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                      d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <div class="setting-text">
+                  <span class="setting-title">Manage Bookmarks</span>
+                  <span class="setting-desc"
+                    >Add, search, or remove favorite cities</span
+                  >
+                </div>
+              </div>
+              <div
+                class="badge-count-pill"
+                id="val-saved-cities-count"
+                onclick="openLocationManager()"
+              >
+                0 Cities
+              </div>
+            </div>
+          </div>
+
+          <h4 class="settings-section-title">Severe Weather Warnings</h4>
+          <div class="settings-list-group">
+            <div class="settings-row-item">
+              <div class="setting-meta-wrap">
+                <div class="setting-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                      d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"
+                      stroke-width="2"
+                    />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2" />
+                  </svg>
+                </div>
+                <div class="setting-text">
+                  <span class="setting-title">High Wind & Rain Alarms</span>
+                  <span class="setting-desc"
+                    >Push notifications during sudden drops</span
+                  >
+                </div>
+              </div>
+              <label class="ios-toggle-switch">
+                <input
+                  type="checkbox"
+                  id="check-alert-severe"
+                  onchange="savePreferenceSettings()"
+                  checked
+                />
+                <span class="toggle-slider-btn"></span>
+              </label>
+            </div>
+
+            <div class="settings-row-item">
+              <div class="setting-meta-wrap">
+                <div class="setting-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2" />
+                    <polyline points="12 6 12 12 16 14" stroke-width="2" />
+                  </svg>
+                </div>
+                <div class="setting-text">
+                  <span class="setting-title">Morning Forecast Briefing</span>
+                  <span class="setting-desc"
+                    >Receive atmospheric brief at 7:00 AM</span
+                  >
+                </div>
+              </div>
+              <label class="ios-toggle-switch">
+                <input
+                  type="checkbox"
+                  id="check-alert-brief"
+                  onchange="savePreferenceSettings()"
+                />
+                <span class="toggle-slider-btn"></span>
+              </label>
+            </div>
+          </div>
+
+          <h4 class="settings-section-title">Interface Theme</h4>
+          <div class="settings-list-group">
+            <div class="settings-row-item">
+              <div class="setting-meta-wrap">
+                <div class="setting-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="5" stroke-width="2" />
+                    <line x1="12" y1="1" x2="12" y2="3" stroke-width="2" />
+                    <line
+                      x1="4.22"
+                      y1="4.22"
+                      x2="5.64"
+                      y2="5.64"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="18.36"
+                      y1="18.36"
+                      x2="19.78"
+                      y2="19.78"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <div class="setting-text">
+                  <span class="setting-title">Color Theme Mode</span>
+                  <span class="setting-desc"
+                    >Set application aesthetics layout</span
+                  >
+                </div>
+              </div>
+
+              <div class="pill-switch">
+                <div class="switch-option" id="theme-option-light">Light</div>
+                <div class="switch-option active" id="theme-option-dark">
+                  Dark
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sticky-settings-save-button">
+            <button
+              class="btn-primary"
+              onclick="displayToast('Preferences compiled and saved offline!')"
+              style="
+                background-color: var(--success-color);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+              "
+            >
+              <span>Save Offline Configurations</span>
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <nav class="nav-bar">
+        <div
+          class="nav-item active"
+          id="nav-tab-home"
+          onclick="switchTab('home')"
+          title="Overview Home page"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+          <span>Home</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-tab-forecast"
+          onclick="switchTab('forecast')"
+          title="Daily hourly prognosis charts"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+          <span>Forecast</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-tab-tips"
+          onclick="switchTab('tips')"
+          title="Travel Route Advisor"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
+          <span>Travel Tips</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-tab-map"
+          onclick="switchTab('map')"
+          title="Interactive South Africa Weather Map"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+            <line x1="8" y1="2" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="22" />
+          </svg>
+          <span>Weather Map</span>
+        </div>
+
+        <div
+          class="nav-item"
+          id="nav-tab-settings"
+          onclick="switchTab('settings')"
+          title="Configurations settings"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+            />
+          </svg>
+          <span>Settings</span>
+        </div>
+      </nav>
+
+      <div class="modal-overlay" id="modal-overlay-locations">
+        <div class="modal-sheet">
+          <div class="modal-header-row">
+            <h3 class="modal-title">Tracked Locations Map</h3>
+            <button
+              class="modal-close-btn"
+              onclick="closeLocationManager()"
+              title="Close Panel"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="search-field-shell">
+            <input
+              type="text"
+              id="location-search-input"
+              oninput="handleSearchAutocomplete(event)"
+              onkeydown="handleSearchKeyDown(event)"
+              placeholder="Search city coordinates (e.g. Johannesburg, Pretoria, Capetown...)"
+              autocomplete="off"
+            />
+            <button
+              class="btn-search-trigger"
+              onclick="submitSearchOnline()"
+              title="Search Online"
+            >
+              Search
+            </button>
+          </div>
+
+          <div
+            id="search-results-overlay-container"
+            class="saved-cities-modal-list"
+            style="max-height: 180px; margin-bottom: 12px; display: none"
+          ></div>
+
+          <h5 class="suggest-title">Saved Locations</h5>
+          <div
+            class="saved-cities-modal-list"
+            id="location-modal-saved-cities-list"
+          ></div>
+
+          <h5 class="suggest-title">Fast Suggest Options</h5>
+          <div class="suggest-badges">
+            <span class="s-badge" onclick="fastPickCityOption('Gqeberha')"
+              >Gqeberha</span
+            >
+            <span class="s-badge" onclick="fastPickCityOption('Midrand')"
+              >Midrand</span
+            >
+            <span class="s-badge" onclick="fastPickCityOption('Cape Town')"
+              >Cape Town</span
+            >
+            <span class="s-badge" onclick="fastPickCityOption('Johannesburg')"
+              >Johannesburg</span
+            >
+            <span class="s-badge" onclick="fastPickCityOption('Durban')"
+              >Durban</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-overlay" id="modal-overlay-radar">
+        <div
+          class="modal-sheet"
+          style="align-items: center; background-color: #0b0f19"
+        >
+          <div class="modal-header-row" style="width: 100%">
+            <h3 class="modal-title" style="color: #60a5fa">
+              Pro Precipitation Doppler
+            </h3>
+            <button
+              class="modal-close-btn"
+              onclick="closeRadarModal()"
+              style="background-color: var(--pill-bg)"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <p class="pro-hero-sub" style="margin-bottom: 16px">
+            Simulated active microclimate radar sweep centered about your
+            coordinates.
+          </p>
+          <div
+            style="
+              background-color: #050508;
+              padding: 10px;
+              border-radius: 20px;
+              border: 1px solid var(--card-border);
+            "
+          >
+            <canvas
+              id="dopplerRadarCanvas"
+              width="320"
+              height="320"
+              style="display: block; border-radius: 12px"
+            ></canvas>
+          </div>
+          <span
+            class="setting-fixed-meta"
+            style="margin-top: 12px; color: var(--success-color)"
+            >● SCANNING CORRIDORS ONLINE</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
